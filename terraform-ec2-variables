@@ -1,0 +1,19 @@
+variable "primary_region" {
+       description = "The AWS region to create Infrastructure" 
+       default     = "ap-south-1" 
+}
+
+variable "ami_id" { 
+    description = "ami id for ec2 instance" 
+    default     =  "ami-0d0ad8bb301edb745" 
+}
+
+variable "instance_type" { 
+    description = "instance type for ec2" 
+    default     =  "t2.micro" 
+}
+
+variable "securitygroup_id" { 
+    description = "security group ID for ec2" 
+    default     =  "sg-090e6a2be13d25084" 
+}
