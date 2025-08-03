@@ -1,0 +1,56 @@
+provider "aws" {
+  region = "ap-south-1" 
+}
+
+resource "aws_db_subnet_group" "rds_subnet_group" {
+  name       = "rds-subnet-group"
+  subnet_ids = ["subnet-05ac81a8c590ff457", "subnet-0761414ded4a0f226"] 
+
+  tags = {
+    Name = "RDS subnet group"
+  }
+}
+
+resource "aws_security_group" "rds_sg" {
+  name        = "rds-security-group"
+  description = "Allow inbound traffic for PostgreSQL"
+  vpc_id      = "vpc-010473c3d8d073dc1" 
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] 
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "RDS SG"
+  }
+}
+
+resource "aws_db_instance" "postgres" {
+  identifier         = "my-postgres-db"
+  engine             = "postgres"
+  # engine_version     = "15.4"
+  instance_class     = "db.t3.micro"
+  allocated_storage  = 20
+  storage_type       = "gp2"
+  username           = "masteruser"
+  password           = "supersecurepassword123" 
+  db_subnet_group_name = aws_db_subnet_group.rds_subnet_group.name
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  skip_final_snapshot = true
+  publicly_accessible = false
+  multi_az            = false
+
+  tags = {
+    Name = "My Postgres DB"
+  }
+}
