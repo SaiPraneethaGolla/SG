@@ -1,0 +1,58 @@
+provider "aws" {
+   region = "ap-south-1"
+}
+
+resource "aws_security_group" "security_grp" {
+  name        = "Security Group"
+  description = "security group for allowing SSH traffic to EC2 instances"
+  vpc_id      = "vpc-010473c3d8d073dc1"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Security Group"
+  }
+
+  output "security_group_id" {
+    description = "The ID of the security group"
+    value       = aws_security_group.custom_security_group.id
+  }
+  
+  output "security_group_name" {
+    description = "The name of the security group"
+    value       = aws_security_group.custom_security_group.name
+  }
+}
