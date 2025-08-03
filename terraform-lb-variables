@@ -1,0 +1,42 @@
+variable "region" {
+  type        = string
+  default     = "ap-south-1"
+  description = "AWS region"
+}
+
+variable "internal" {
+  description = "Set to true if the ALB should be internal"
+  default     = false
+}
+
+variable "load_balancer_name" {
+  description = "The name of the load balancer"
+  default     = "frontend-alb"
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "VPC where the ALB will be deployed"
+  default     = "vpc-010473c3d8d073dc1"
+}
+
+variable "public_subnet_ids" {
+  type        = list(string)
+  description = "List of public subnet IDs for ALB"
+  default     = ["subnet-05ac81a8c590ff457", "subnet-0761414ded4a0f226"]
+}
+
+variable "listener_port" {
+  description = "The port for the ALB listener"
+  default     = 80
+}
+
+variable "listener_protocol" {
+  description = "The protocol for the ALB listener"
+  default     = "HTTP"
+}
+
+variable "listener_rule_path_pattern" {
+  description = "The path pattern for the listener rule"
+  default     = ["/"]
+}
