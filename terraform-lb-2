@@ -1,0 +1,60 @@
+provider "aws" {
+  region = var.region
+}
+
+resource "aws_lb" "frontend_alb" {
+  name               = var.load_balancer_name
+  internal           = var.internal
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = var.public_subnet_ids
+}
+
+resource "aws_security_group" "alb_sg" {
+  name        = "${var.load_balancer_name}-sg"
+  description = "Allow HTTP access"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description = "Allow HTTP from anywhere"
+    from_port   = var.listener_port
+    to_port     = var.listener_port
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_lb_target_group" "frontend_tg" {
+  name     = "${var.load_balancer_name}-tg"
+  port     = var.listener_port
+  protocol = var.listener_protocol
+  vpc_id   = var.vpc_id
+
+  health_check {
+    path                = var.listener_rule_path_pattern[0]
+    protocol            = var.listener_protocol
+   # matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_listener" "frontend_listener" {
+  load_balancer_arn = aws_lb.frontend_alb.arn
+  port              = var.listener_port
+  protocol          = var.listener_protocol
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.frontend_tg.arn
+  }
+}
