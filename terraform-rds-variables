@@ -1,0 +1,60 @@
+variable "region" {
+  description = "AWS region where resources will be deployed"
+  type        = string
+  default     = "ap-south-1"
+}
+
+variable "subnet_ids" {
+  description = "List of subnet IDs for the RDS subnet group"
+  type        = list(string)
+  default     = ["subnet-05ac81a8c590ff457", "subnet-0761414ded4a0f226"]
+}
+
+variable "vpc_id" {
+  description = "VPC ID where the RDS resources will be launched"
+  type        = string
+  default     = "vpc-010473c3d8d073dc1"
+}
+
+variable "db_identifier" {
+  description = "Identifier for the RDS instance"
+  type        = string
+  default     = "my-postgres-db"
+}
+
+variable "db_engine" {
+  description = "Database engine to use"
+  type        = string
+  default     = "postgres"
+}
+
+variable "db_instance_class" {
+  description = "Instance type for the RDS instance"
+  type        = string
+  default     = "db.t3.micro"
+}
+
+variable "allocated_storage" {
+  description = "Allocated storage in GB"
+  type        = number
+  default     = 20
+}
+
+variable "storage_type" {
+  description = "Type of storage to use"
+  type        = string
+  default     = "gp2"
+}
+
+variable "db_username" {
+  description = "Master username for the database"
+  type        = string
+  default     = "masteruser"
+}
+
+variable "db_password" {
+  description = "Master password for the database"
+  type        = string
+  default     = "supersecurepassword123"
+  sensitive   = true
+}
